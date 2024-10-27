@@ -5,10 +5,13 @@ import (
 	"log"
 	"strings"
 
+	"github.com/vaidehi-figma/protoc-gen-rbi/testdata"
 	pgs "github.com/vaidehi-figma/protoc-gen-star"
 )
 
 type methodType int
+
+var useCustomOptionNilable bool = false
 
 const (
 	methodTypeGetter methodType = iota
@@ -38,6 +41,8 @@ func RubyPackage(file pgs.File) string {
 		pkg = file.Descriptor().GetPackage()
 	}
 	pkg = strings.Replace(pkg, ".", "::", -1)
+	extInfo := testdata.E_UseCustomOptionNilable
+	file.Extension(extInfo, &useCustomOptionNilable)
 	// right now the ruby_out doesn't camelcase the ruby_package, but this results in invalid classes, so do it:
 	return upperCamelCase(pkg)
 }
@@ -153,7 +158,7 @@ func RubyFieldValue(field pgs.Field) string {
 func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 	pt := ft.ProtoType()
 	result := ""
-	nilable := !strings.Contains(field.Descriptor().GetOptions().String(), "1000:1")
+	nilable := !(strings.Contains(field.Descriptor().GetOptions().String(), "required_field")) && useCustomOptionNilable
 	if pt.IsInt() {
 		result = "Integer"
 	}
@@ -187,7 +192,7 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 
 func rubyProtoTypeValue(field pgs.Field, ft FieldType) string {
 	pt := ft.ProtoType()
-	nilable := !strings.Contains(field.Descriptor().GetOptions().String(), "1000:1")
+	nilable := !(strings.Contains(field.Descriptor().GetOptions().String(), "required_field")) && useCustomOptionNilable
 	if nilable {
 		return "nil"
 	}

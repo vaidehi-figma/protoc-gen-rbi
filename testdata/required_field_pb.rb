@@ -7,10 +7,11 @@ require 'google/protobuf'
 require 'google/protobuf/descriptor_pb'
 
 
-descriptor_data = "\n\x1dtestdata/required_field.proto\x1a google/protobuf/descriptor.proto\"\x84\x01\n\x05Thing\x12\x10\n\x03\x66oo\x18\x01 \x01(\tB\x03\xc0>\x01\x12#\n\x03\x62\x61r\x18\x02 \x01(\x0b\x32\x11.Thing.InnerThingB\x03\xc0>\x01\x12\x16\n\x0eoptional_value\x18\x03 \x01(\t\x1a,\n\nInnerThing\x12\x1e\n\x16\x61nother_optional_value\x18\x01 \x01(\t:6\n\x0erequired_field\x12\x1d.google.protobuf.FieldOptions\x18\xe8\x07 \x01(\x08\x62\x08\x65\x64itionsp\xe8\x07"
+descriptor_data = "\n\x1dtestdata/required_field.proto\x1a google/protobuf/descriptor.proto\"\x84\x01\n\x05Thing\x12\x10\n\x03\x66oo\x18\x01 \x01(\tB\x03\xc0>\x01\x12#\n\x03\x62\x61r\x18\x02 \x01(\x0b\x32\x11.Thing.InnerThingB\x03\xc0>\x01\x12\x16\n\x0eoptional_value\x18\x03 \x01(\t\x1a,\n\nInnerThing\x12\x1e\n\x16\x61nother_optional_value\x18\x01 \x01(\t:6\n\x0erequired_field\x12\x1d.google.protobuf.FieldOptions\x18\xe8\x07 \x01(\x08:@\n\x19use_custom_option_nilable\x12\x1c.google.protobuf.FileOptions\x18\xd0\x0f \x01(\x08\x42\x0eZ\ttestdata/\x80}\x01\x62\x08\x65\x64itionsp\xe8\x07"
 
 pool = Google::Protobuf::DescriptorPool.generated_pool
-pool.add_serialized_file(descriptor_data)
+file_descriptor = pool.add_serialized_file(descriptor_data)
+puts "file_descriptor: #{file_descriptor}"
 
 Thing = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Thing").msgclass
 Thing::InnerThing = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Thing.InnerThing").msgclass
